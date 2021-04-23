@@ -1,0 +1,62 @@
+<html>
+<body>
+ <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+<svg xmlns="http://www.w3.org/2000/svg" id="SvgElement" style="top: -0.18px; overflow: hidden; position: relative;" width="5000" height="5000" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:NS1="" NS1:xmlns:xlink="http://www.w3.org/1999/xlink"><desc>Created with Raphaël 2.3.0</desc><defs /><circle id="s1" fill="#223fa3" fill-opacity="0.8" stroke="#000" stroke-width="6.66667" transform="matrix(0.15 0 0 0.15 0 0)" cx="200" cy="270" r="90" /><circle id="s2" fill="#223fa3" fill-opacity="0.8" stroke="#000" stroke-width="6.66667"  transform="matrix(0.15 0 0 0.15 0 0)" cx="400" cy="400" r="110" /><circle id="s3" fill="#223fa3" fill-opacity="0.8" stroke="#000" stroke-width="6.66667"  transform="matrix(0.15 0 0 0.15 0 0)" cx="200" cy="600" r="200" /><circle id="s4" fill="#223fa3" fill-opacity="0.8" stroke="#000" stroke-width="6.66667"  transform="matrix(0.15 0 0 0.15 0 0)" cx="600" cy="200" r="300" /><rect id="rect4" fill="#223fa3" fill-opacity="0.8" stroke="#000" stroke-width="6.66667" transform="matrix(0.15 0 0 0.15 0 0)" x="440" y="1117.6" width="1033.33" height="500" rx="0" ry="0" /><rect id="rect5" fill="#223fa3" fill-opacity="0.8" stroke="#000" stroke-width="6.66667" transform="matrix(0.15 0 0 0.15 0 0)" x="393.333" y="1924.27" width="1326.67" height="406.663" rx="0" ry="0" /></svg>
+<script>
+
+var selection = d3.select("#SvgElement");
+ var elt = selection.node();
+var svgString=svgString+elt.toString();
+var s = new XMLSerializer();
+var str = s.serializeToString(elt);
+
+parser = new DOMParser();
+                xmlDoc = parser.parseFromString( str , 'image/svg+xml');
+
+var EllipseXML = xmlDoc.getElementsByTagName("rect");
+
+
+$("#SvgElement rect").each(function() {
+   var s=d3.select("#"+this.id);
+s.on("mouseover", handleMouseOver)
+});
+$("#SvgElement circle").each(function() {
+    
+    var s=d3.select("#"+this.id);
+s.on("mouseover", handleMouseOver)
+
+
+    console.log(this.id);
+});
+$("#SvgElement circle").each(function() {
+    
+    var s=d3.select("#"+this.id);
+s.on("mouseout",Mouseout)
+
+});
+$("#SvgElement rect").each(function() {
+    
+    var s=d3.select("#"+this.id);
+s.on("mouseout",Mouseout)
+
+});
+function handleMouseOver(d, i) {  // Add interactivity
+
+ var id=d3.select(this).attr('id');
+           idd=id;
+var myLine = $("#"+idd);
+  myLine.css("strokeWidth", 50);
+       }
+       function Mouseout(d, i) {  // Add interactivity
+
+ var id=d3.select(this).attr('id');
+           var idd=id;
+var myLine = $("#"+idd);
+  myLine.css("strokeWidth", 10);
+       }
+
+//console.log(xmlDoc);
+</script>
+</body>
+</html>

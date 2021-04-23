@@ -1,0 +1,1414 @@
+<html>
+    <title>OpenSeadragon Overlay Demo</title>
+    <script type="text/javascript" src='openseadragon.js'></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.3.0/raphael.js"></script>
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+
+    <style type="text/css">
+
+        .openseadragon1 {
+            width: 800px;
+            height: 600px;
+        }
+        .handle{
+      
+        }
+        .element{
+        position: absolute;
+        z-index: -1;
+        }
+
+    </style>
+</head>
+<body>
+<input type="button" value="Rect " id="t1" onclick="rectAnno()">
+<input type="button" value="Circle " id="t2" onclick="circleAnno()">
+<input type="button" value="Ellipse " id="t3" onclick="ellipseAnno()">
+<input type="button" value="Ellipse " id="t3" onclick="ellipseAnno()">
+<input type="button" value="Load " id="l1" onclick="load()">
+<input type="button" value="Save " id="l2" onclick="save()">
+<input type="button" value="Property " id="l3" onclick="showProperty()">
+<input type="button" value="rotated " id="l3" onclick="rotated()">
+<br>Strock Color:
+<select name="strock_color" id="strock_color" onchange="strock_color()">
+  <option value="green">Green</option>
+  <option value="blue">Blue</option>
+  <option value="black">Black</option>
+  <option value="red">Red</option>
+</select>Strock width:
+<select name="strock_width" id="strock_width" onchange="strock_width()">
+  <option value="20">20</option>
+  <option value="30">30</option>
+  <option value="50">50</option>
+  <option value="70">70</option>
+  <option value="70">100</option>
+   <option value="70">130</option>
+</select>
+Strock Style:
+<select name="strock_style" id="strock_style" onchange="strock_style()">
+  <option value="5,10,5">stroke-dasharray</option>
+  <option value="5">solid</option>
+  <option value="5,5">stroke-linecap</option>
+</select>
+Fill:
+<select name="fill_style" id="fill_style" onchange="fill_style()">
+  <option value="red">red</option>
+  <option value="green">green</option>
+  <option value="blue">blue</option>
+</select>
+
+
+
+<div id="properties1">
+    <div id="contentDiv" class="openseadragon1"></div>
+    <script type="text/javascript">
+        var viewer1 = OpenSeadragon({
+  
+            id: "contentDiv",
+            prefixUrl: "images/",
+            tileSources: "IMG_20140731_154730.dzi",
+
+        });
+viewer1.addHandler('open', function(event){
+	var elt = document.createElement("div");
+	elt.className = "overlay";
+    elt.id = "overlay_T";
+    elt.id = "overlay_T";
+    elt.style = "left: 50px";
+	var dimensions = viewer1.source.dimensions;
+	viewer1.addOverlay({
+		element: elt,
+		location: viewer1.viewport.imageToViewportRectangle( new OpenSeadragon.Rect(0, 0, dimensions.x, dimensions.y) )
+	});
+});
+
+var handC1;
+var idList=[];
+var set,s1,paper;
+    viewer1.addHandler('add-overlay', function(event){
+	 paper = Raphael(event.element);
+ //paper=Raphael("filterDiv", 1100, 1000);
+    paper.canvas.setAttribute('id', 'SvgElement');
+    paper.canvas.setAttribute('width', 5000);
+     paper.canvas.setAttribute('height', 5000);
+    // paper.canvas.setAttribute('x', 100);   
+    /*var $svg = $("#SvgElement");
+    var g1 = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    g1.setAttribute("id", "annotation_block");
+    $svg.append($(g1));
+     var $svg = $("#SvgElement");
+    var g2 = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    g2.setAttribute("id", "handle_block");
+    $svg.append($(g2));
+     */
+	set = paper.set();
+	//set.push(  paper.circle(196,202.5,200).animate({fill: "#223fa3", "fill-opacity": 0.5},2000));
+
+ /*
+var aa=paper.circle(300,900,600);
+aa.node.id = 'c1';
+aa.node.setAttribute('onclick',"selected(this.id)");
+aa.node.setAttribute('fill',"#223fa3");
+aa.node.setAttribute('stroke','red');
+aa.node.setAttribute('class','ram');
+aa.node.setAttribute('fill-opacity',0.8);
+//set.push(aa);
+idList.push(aa.node.id);
+var aa=paper.circle(500,1000,600);
+aa.node.id = 'c2';
+aa.node.setAttribute('onclick',"selected(this.id)");
+aa.node.setAttribute('fill',"#223fa3");
+aa.node.setAttribute('class','ram');
+aa.node.setAttribute('stroke','blue');
+aa.node.setAttribute('fill-opacity',0.8);
+idList.push(aa.node.id);
+//set.push(aa);
+//var s1=set.push(paper.rect(596,202.5,400,400).animate({fill: "#223fa3", "fill-opacity": 0.5,stroke-width:"20"}, 2000));
+
+/*
+var a=paper.rect(600,600,200,100);
+a.node.id = 'rect1';
+//a.node.setAttribute("class","track");
+a.node.setAttribute('onclick',"selected(this.id)");
+a.node.setAttribute('fill',"#223fa3");
+a.node.setAttribute('stroke','green');
+a.node.setAttribute('class','ram');
+a.node.setAttribute('stroke-dasharray','6 0');
+a.node.setAttribute('fill-opacity',0.8);
+set.push(a);
+idList.push(a.node.id);
+var a=paper.rect(800,600,500,600);
+a.node.id = 'rect2';
+a.node.setAttribute('onclick',"selected(this.id)");
+a.node.setAttribute('fill',"#223fa3");
+//a.node.setAttribute('class','ram');
+a.node.setAttribute('stroke','green');
+a.node.setAttribute('fill-opacity',0.8);
+//set.push(a);
+idList.push(a.node.id);
+var a=paper.ellipse(796,302,500,200);
+a.node.id = 'e1';
+a.node.setAttribute('onclick',"selected(this.id)");
+a.node.setAttribute('fill',"#223fa3");
+a.node.setAttribute('class','ram');
+a.node.setAttribute('stroke','blue');
+a.node.setAttribute('fill-opacity',0.8);
+//set.push(a);
+idList.push(a.node.id);
+var path = paper.path();
+path.node.id = 'polygon1';
+path.node.setAttribute('onclick',"selected(this.id)");
+path.node.setAttribute('stroke','black');
+path.node.setAttribute('stroke-width',3);
+path.node.setAttribute('class','ram');
+path.node.setAttribute('d','M 169 1212 L 1580 982 L 840 2393 L 1234 2045 Z');
+path.node.setAttribute('fill-opacity',0.8);
+path.node.setAttribute('fill',"#223fa3");
+//set.push(path);
+idList.push(path.node.id);
+/*
+ var tri = paper.path( ["M", 100, 100, "L", 300, 100 ]).attr("fill", "red");
+ tri.node.id = 'l1';
+set.push(tri);
+*/
+
+
+var aa=paper.circle(-10,-10,30);
+aa.node.id = 's1';
+aa.node.setAttribute('onclick',"selected(this.id)");
+aa.node.setAttribute('fill',"red");
+aa.node.setAttribute('class',"handle");
+aa.node.setAttribute('fill-opacity',0.8);
+set.push(aa);
+idList.push(aa.node.id);
+var aa=paper.circle(-10,-10,30);
+aa.node.id = 's2';
+aa.node.setAttribute('onclick',"selected(this.id)");
+aa.node.setAttribute('fill',"red");
+aa.node.setAttribute('class',"handle");
+aa.node.setAttribute('fill-opacity',0.8);
+set.push(aa);
+idList.push(aa.node.id);
+var aa=paper.circle(-10,-10,30);
+aa.node.id = 's3';
+aa.node.setAttribute('onclick',"selected(this.id)");
+aa.node.setAttribute('fill',"red");
+aa.node.setAttribute('class',"handle");
+aa.node.setAttribute('fill-opacity',0.8);
+set.push(aa);
+idList.push(aa.node.id);
+var aa=paper.circle(-10,-10,30);
+aa.node.id = 's4';
+aa.node.setAttribute('onclick',"selected(this.id)");
+aa.node.setAttribute('fill',"red");
+aa.node.setAttribute('class',"handle");
+aa.node.setAttribute('fill-opacity',0.8);
+set.push(aa);
+idList.push(aa.node.id);
+
+transformSet( set )
+
+});
+
+viewer1.addHandler('animation', function(event){
+  viewer1.zoomPerClick = 2;  // for  disabled zooming when click( if want to On value will be 2)
+//this.viewer1.gestureSettingsMouse.clickToZoom = false;
+//viewer1.zoomPerdbClick = 1;
+ 
+//event.preventDefault();
+ //event.stopPropagation();
+ //event.stopImmediatePropagation();
+
+
+	transformSet( set )
+
+});
+  var polyCount=4;
+var polyDraw=0;
+function polygon()
+{
+  polyDraw++;
+}
+
+var rectCount=4;
+var rectDraw=0;
+function rectAnno()
+{
+rectDraw++;
+}
+var circleCount=4;
+var circleDraw=0;
+function circleAnno()
+{
+circleDraw++;;
+}
+var ellipseCount=4;
+var ellipseDraw=0;
+function ellipseAnno()
+{
+
+ellipseDraw++;
+}
+
+var z1;
+var preZoom;
+var ss1;
+var ss2;
+var properties={};
+function strock_width(){
+  var val=document.getElementById("strock_width").value;
+   
+  if(idd!="") {
+   var myLine = $("#"+idd);
+  myLine.css("strokeWidth", val);
+  document.getElementById("s1").setAttribute('r',50);
+document.getElementById("s1").setAttribute('r',50);
+document.getElementById("s2").setAttribute('r',50);
+document.getElementById("s2").setAttribute('r',50);
+document.getElementById("s3").setAttribute('r',50);
+document.getElementById("s3").setAttribute('r',50);
+document.getElementById("s4").setAttribute('r',50);
+document.getElementById("s4").setAttribute('r',50);
+}
+else
+console.log("Please select the annotation");
+  
+}
+function fill_style()
+{
+var val=document.getElementById("fill_style").value;
+if(idd!="") {
+   var myLine = $("#"+idd);
+  myLine.css("fill", val);
+}
+else
+console.log("please select annotation");
+
+}
+function strock_color(){
+//var ss1=d3.select("#rect2");
+
+
+/*
+var annoList=$("#SvgElement");
+var str=annoList[0].innerHTML
+var vis = d3.select("#rect2");
+vis=document.getElementById('SvgElement');
+console.log(vis);
+*/
+  var val=document.getElementById("strock_color").value;
+  //if(idd!="")
+//ss1.attr("stroke-width", 20);
+//ss1.attr("stroke",val);
+
+  //document.getElementById(idd).setAttribute('stroke',val);
+  //var myLine = $(".ram");
+  //myLine.css("stroke", val);
+  if(idd!="") {
+   var myLine = $("#"+idd);
+  myLine.css("stroke", val);
+}
+else
+console.log("please select annotation");
+
+}
+function strock_style(){
+  var val=document.getElementById("strock_style").value;
+   if(idd!="")
+  document.getElementById(idd).setAttribute('stroke-dasharray',val);
+}
+
+
+var degree=0
+function rotated()
+{
+  if(degree==0){
+   viewer1.viewport.setRotation(90);
+   degree=90;
+ }
+  else if(degree==90){
+   viewer1.viewport.setRotation(180);
+   degree=180;
+ }
+  else if(degree==180){
+   viewer1.viewport.setRotation(270);
+   degree=270;
+ }
+ else if(degree==270){
+   viewer1.viewport.setRotation(0);
+   degree=0;
+ }
+}
+function getProperties(id)
+{
+
+if(id[0]=='r')
+{
+
+
+var width =document.getElementById(id).getAttribute('width');
+var height = document.getElementById(id).getAttribute('height');
+var x = document.getElementById(id).getAttribute('x');
+var y = document.getElementById(id).getAttribute('y');
+var eid = document.getElementById(id).getAttribute('id');
+var fill=document.getElementById(id).getAttribute('fill');
+var opacity=document.getElementById(id).getAttribute('fill-opacity');
+var stroke_width=document.getElementById(id).getAttribute('stroke-width');
+var stroke_color=document.getElementById(id).getAttribute('stroke');
+var transform=document.getElementById(id).getAttribute("transform");
+
+properties= {
+  type:"rect",
+    x: x,
+    y: y,
+    width:width,
+    height:height,
+    id:eid,
+    fill:fill,
+    opacity:opacity,
+    stroke_width:stroke_width,
+    stroke_color:stroke_color,
+    transform:transform
+};
+}
+if(id[0]=='c')
+{
+var cx =document.getElementById(id).getAttribute('cx');
+var cy = document.getElementById(id).getAttribute('cy');
+var r = document.getElementById(id).getAttribute('r');
+var eid = document.getElementById(id).getAttribute('id');
+var fill=document.getElementById(id).getAttribute('fill');
+var opacity=document.getElementById(id).getAttribute('fill-opacity');
+var stroke_width=document.getElementById(id).getAttribute('stroke-width');
+var stroke_color=document.getElementById(id).getAttribute('stroke');
+var transform=document.getElementById(id).getAttribute("transform");
+
+properties={};
+properties= {
+  type:"circle",
+    cx: cx,
+    cy: cy,
+    r:r,  
+    id:eid,
+    fill:fill,
+    opacity:opacity,
+    stroke_width:stroke_width,
+    stroke_color:stroke_color,
+    transform:transform
+};
+}
+if(id[0]=='e')
+{
+
+var cx =document.getElementById(id).getAttribute('cx');
+var cy = document.getElementById(id).getAttribute('cy');
+var rx = document.getElementById(id).getAttribute('rx');
+var ry = document.getElementById(id).getAttribute('ry');
+var eid = document.getElementById(id).getAttribute('id');
+var fill=document.getElementById(id).getAttribute('fill');
+var opacity=document.getElementById(id).getAttribute('fill-opacity');
+var stroke_width=document.getElementById(id).getAttribute('stroke-width');
+var stroke_color=document.getElementById(id).getAttribute('stroke');
+var transform=document.getElementById(id).getAttribute("transform");
+
+properties= {
+  type:"ellipse",
+    cx: cx,
+    cy: cy,
+    rx:rx,
+    ry:ry,
+    id:eid,
+    fill:fill,
+    opacity:opacity,
+    stroke_width:stroke_width,
+    stroke_color:stroke_color,
+    transform:transform
+};
+}
+
+//document.getElementById("rect2").setAttribute('stroke-width',55);
+ //document.getElementById("fill").value = "Johnny Bravo";
+}
+
+function transformSet( el ){
+var zoom =z1= viewer1.viewport.viewportToImageZoom( viewer1.viewport.getZoom(true));
+el.transform( 'S'+zoom+','+zoom+',0,0' );
+}
+
+var clickFlag=true;
+var handle="";
+var x1,y1,w1,h1,r1,rx,ry;
+var reSizeflag;
+
+function selected(id)
+{  
+ 
+handleActive=true;
+
+if(id[0]!='s')
+{
+idd=id; 
+getProperties(idd);
+} 
+else
+{
+handle=id;
+
+if(idd[0]=='r')
+{
+  var rect = document.getElementById(idd);
+w1= parseFloat(rect.getAttributeNS(null, 'width'));
+h1 = parseFloat(rect.getAttributeNS(null, 'height'));
+x1 = parseFloat(rect.getAttributeNS(null, 'x'));
+y1 = parseFloat(rect.getAttributeNS(null, 'y'));
+}
+if(idd[0]=='c')
+{
+var circle = document.getElementById(idd);
+r1 = parseFloat(circle.getAttributeNS(null, 'r'));
+x1 = parseFloat(circle.getAttributeNS(null, 'cx'));
+y1 = parseFloat(circle.getAttributeNS(null, 'cy'));
+}
+if(idd[0]=='e')
+{
+var ellipse = document.getElementById(idd);
+
+x1 = parseFloat(ellipse.getAttributeNS(null, 'cx'));
+y1 = parseFloat(ellipse.getAttributeNS(null, 'cy'));
+rx1 = parseFloat(ellipse.getAttributeNS(null, 'rx'));
+ry1 = parseFloat(ellipse.getAttributeNS(null, 'ry'));
+
+}
+}
+
+if(clickFlag==true)
+{
+//  for Resize
+if(idd[0]=='c')
+{
+  var circle = document.getElementById(idd);
+var x = parseFloat(circle.getAttributeNS(null, 'cx'));
+var y = parseFloat(circle.getAttributeNS(null, 'cy'));
+var r = parseFloat(circle.getAttributeNS(null, 'r'));
+document.getElementById("s2").setAttribute('cy',y);
+document.getElementById("s2").setAttribute('cx',x-r);
+document.getElementById("s1").setAttribute('cy',y-r);
+document.getElementById("s1").setAttribute('cx',x);
+document.getElementById("s4").setAttribute('cy',y+r);
+document.getElementById("s4").setAttribute('cx',x);
+document.getElementById("s3").setAttribute('cy',y);
+document.getElementById("s3").setAttribute('cx',x+r);
+}
+if(idd[0]=='r')
+{
+var rect = document.getElementById(idd);
+var x = parseFloat(rect.getAttributeNS(null, 'x'));
+var y = parseFloat(rect.getAttributeNS(null, 'y'));
+var w = parseFloat(rect.getAttributeNS(null, 'width'));
+var h = parseFloat(rect.getAttributeNS(null, 'height'));
+document.getElementById("s1").setAttribute('cy',y);
+document.getElementById("s1").setAttribute('cx',x);
+document.getElementById("s2").setAttribute('cy',y);
+document.getElementById("s2").setAttribute('cx',x+w);
+document.getElementById("s3").setAttribute('cy',y+h);
+document.getElementById("s3").setAttribute('cx',x);
+document.getElementById("s4").setAttribute('cy',y+h);
+document.getElementById("s4").setAttribute('cx',x+w);
+}
+if(idd[0]=='e')
+{
+var ellipse = document.getElementById(idd);
+var x = parseFloat(ellipse.getAttributeNS(null, 'cx'));
+var y = parseFloat(ellipse.getAttributeNS(null, 'cy'));
+var rx = parseFloat(ellipse.getAttributeNS(null, 'rx'));
+var ry = parseFloat(ellipse.getAttributeNS(null, 'ry'));
+
+document.getElementById("s1").setAttribute('cy',y);
+document.getElementById("s1").setAttribute('cx',x-rx);
+document.getElementById("s2").setAttribute('cy',y);
+document.getElementById("s2").setAttribute('cx',x+rx);
+document.getElementById("s3").setAttribute('cy',y+ry);
+document.getElementById("s3").setAttribute('cx',x);
+document.getElementById("s4").setAttribute('cy',y-ry);
+document.getElementById("s4").setAttribute('cx',x);
+}
+if(idd[0]=='p' && idd[4]=='g')
+{
+  
+  
+var polygon = document.getElementById(idd);
+var x =document.getElementById(idd).getAttribute('d');
+var s=x.split(" ")
+
+for(i=1;i<(s.length-2);){
+
+if(s[i]=='L' || s[i]=='Z')
+console.log("mm");
+else{
+
+var aa=paper.circle(s[i],s[i+1],100);
+aa.node.id = 'PG_C'+i;
+aa.node.setAttribute('onclick',"selected(this.id)");
+aa.node.setAttribute('fill',"#223fa3");
+aa.node.setAttribute('class','element');
+aa.node.setAttribute('fill-opacity',0.8);
+set.push(aa);
+}
+i=i+3;
+}
+
+}
+clickFlag=false;
+}
+else
+{
+
+clickFlag=true;
+if(handle!="")
+{
+//handle="";
+clickFlag=false;
+}
+}
+}
+
+var idd="";
+
+//contentDiv
+//annotation
+var currentImagePoint;
+var handleActive=false;
+var handle_select=true;
+function test1()
+{
+ 
+}
+var handleFlag=false;
+$("#annotation").mousemove(function (e) {   
+  
+/*       
+        if(handle_select==true){
+var svg = document.querySelector("svg");
+var rects = document.querySelectorAll(".handle");
+var i = rects.length;
+while(i--) {
+
+
+  rects[i].addEventListener("mouseover", function(e) {
+
+    svg.appendChild(e.target);
+
+  });
+
+}
+
+
+var s=d3.select("#s1");
+s.on("mouseover", test1())
+var s=d3.select("#s2");
+s.on("mouseover", test1())
+
+}
+
+*/
+
+
+
+
+
+        var tracker = new OpenSeadragon.MouseTracker({
+            element: viewer1.container,
+            moveHandler: function(event) {
+                var webPoint = event.position;
+                var viewportPoint = viewer1.viewport.pointFromPixel(webPoint);
+                var imagePoint =currentImagePoint= viewer1.viewport.viewportToImageCoordinates(viewportPoint);
+                var zoom = viewer1.viewport.getZoom(true);
+                var imageZoom = viewer1.viewport.viewportToImageZoom(zoom);
+               if(idd!="" && clickFlag==true){              
+                    if(idd[0]=='c'){
+                      document.getElementById(idd).setAttribute('cy',imagePoint.y);
+                      document.getElementById(idd).setAttribute('cx',imagePoint.x);
+                       var circle = document.getElementById(idd);
+                       var r = parseFloat(circle.getAttributeNS(null, 'r'));
+                      
+                      document.getElementById("s1").setAttribute('cy',imagePoint.y-r);
+                      document.getElementById("s1").setAttribute('cx',imagePoint.x);
+                      document.getElementById("s2").setAttribute('cy',imagePoint.y);
+                      document.getElementById("s2").setAttribute('cx',imagePoint.x+r);
+                      document.getElementById("s3").setAttribute('cy',imagePoint.y+r);
+                      document.getElementById("s3").setAttribute('cx',imagePoint.x);
+                      document.getElementById("s4").setAttribute('cy',imagePoint.y);
+                      document.getElementById("s4").setAttribute('cx',imagePoint.x-r);
+                   
+                            }
+                   if(idd[0]=='e'){
+                      document.getElementById(idd).setAttribute('cy',imagePoint.y);
+                      document.getElementById(idd).setAttribute('cx',imagePoint.x);
+                      var ellipse = document.getElementById(idd);           
+                      var rx = parseFloat(ellipse.getAttributeNS(null, 'rx'));
+                      var ry = parseFloat(ellipse.getAttributeNS(null, 'ry'));
+                    
+                      document.getElementById("s1").setAttribute('cy',imagePoint.y);
+                      document.getElementById("s1").setAttribute('cx',imagePoint.x-rx);
+                      document.getElementById("s2").setAttribute('cy',imagePoint.y);
+                      document.getElementById("s2").setAttribute('cx',imagePoint.x+rx);
+                      document.getElementById("s3").setAttribute('cy',imagePoint.y+ry);
+                      document.getElementById("s3").setAttribute('cx',imagePoint.x);
+                      document.getElementById("s4").setAttribute('cy',imagePoint.y-ry);
+                      document.getElementById("s4").setAttribute('cx',imagePoint.x);
+                   
+                            }
+                  if(idd[0]=='r'){
+                      document.getElementById(idd).setAttribute('y',imagePoint.y);
+                      document.getElementById(idd).setAttribute('x',imagePoint.x);
+                      var rect = document.getElementById(idd);
+                      var w = parseFloat(rect.getAttributeNS(null, 'width'));
+                      var h = parseFloat(rect.getAttributeNS(null, 'height'));
+                      document.getElementById("s1").setAttribute('cy',imagePoint.y);
+                      document.getElementById("s1").setAttribute('cx',imagePoint.x);
+                      document.getElementById("s2").setAttribute('cy',imagePoint.y);
+                      document.getElementById("s2").setAttribute('cx',imagePoint.x+w);
+                      document.getElementById("s3").setAttribute('cy',imagePoint.y+h);
+                      document.getElementById("s3").setAttribute('cx',imagePoint.x);
+                      document.getElementById("s4").setAttribute('cy',imagePoint.y+h);
+                      document.getElementById("s4").setAttribute('cx',imagePoint.x+w);
+                  
+                            }      
+                            if(idd[0]=='p' && idd[4]=='g'){
+
+                              /*
+                      document.getElementById(idd).setAttribute('y',imagePoint.y);
+                      document.getElementById(idd).setAttribute('x',imagePoint.x);
+                      
+                      
+                      document.getElementById("s1").setAttribute('cy',imagePoint.y);
+                      document.getElementById("s1").setAttribute('cx',imagePoint.x);
+                      document.getElementById("s2").setAttribute('cy',imagePoint.y);
+                      document.getElementById("s2").setAttribute('cx',imagePoint.x+w);
+                      document.getElementById("s3").setAttribute('cy',imagePoint.y+h);
+                      document.getElementById("s3").setAttribute('cx',imagePoint.x);
+                      document.getElementById("s4").setAttribute('cy',imagePoint.y+h);
+                      document.getElementById("s4").setAttribute('cx',imagePoint.x+w);
+                  */
+                            }                  
+                  }
+              else
+              {
+                if(handle[0]=="s" && reSizeflag==true)      
+                {                       
+                      resize(imagePoint.x,imagePoint.y)
+                    }
+                    else{
+                     
+                     
+
+                    }
+                  }
+            
+
+
+            if(circleDraw==2)
+            {
+               var circle = document.getElementById(drawingAnnoId);
+                       var cx = parseFloat(circle.getAttributeNS(null, 'cx'));
+                       var cy = parseFloat(circle.getAttributeNS(null, 'cy'));
+                       var difx=imagePoint.x-cx; 
+                       difx=Math.abs(difx);
+                       document.getElementById(drawingAnnoId).setAttribute('r',difx);
+                        
+            }
+            if(rectDraw==2)
+            {
+               var rect = document.getElementById(drawingAnnoId);
+                       var x = parseFloat(rect.getAttributeNS(null, 'x'));
+                       var y = parseFloat(rect.getAttributeNS(null, 'y'));
+                       var w=imagePoint.x-x;
+                       var h=imagePoint.y-y; 
+                       if(w>5 && h>5){
+                      document.getElementById(drawingAnnoId).setAttribute('width',w);
+                      document.getElementById(drawingAnnoId).setAttribute('height',h);
+                    }       
+            }
+            if(ellipseDraw==2)
+            {
+               var ellipse = document.getElementById(drawingAnnoId);
+                       var x = parseFloat(ellipse.getAttributeNS(null, 'cx'));
+                       var y = parseFloat(ellipse.getAttributeNS(null, 'cy'));
+                       var rx=imagePoint.x-x;
+                      var ry=imagePoint.y-y; 
+                       rx=Math.abs(rx);
+                       ry=Math.abs(ry);
+                      document.getElementById(drawingAnnoId).setAttribute('rx',rx);
+                      document.getElementById(drawingAnnoId).setAttribute('ry',ry);
+            }
+             if(handleActive==false)
+            {
+             
+              
+                        
+            }
+
+          }
+
+
+         
+        });  
+
+        tracker.setTracking(true);  
+});
+
+/*
+$("#SvgElement").click(function() {
+
+  var test=d3.select(this).attr('id');
+
+ var selection = d3.select(this);
+var checkAnnoId = selection.attr("id");
+//console.log(test+"   ---"+checkAnnoId)
+});
+*/
+
+
+ // xmlDoc = parser.parseFromString("<svg>" + XMLString + "</svg>", 'text/xml');
+
+
+var str='<rect x="666" y="777" id="_201" width="663.2241210937505" height="543.6263732910156" fill="#F0F8FF" fill-opacity="0.5" stroke-width="1.5" stroke="#FF0000" stroke-dasharray="6 0" transform="translate(0,0)rotate(0)" CreatedOn="08/04/2021" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); cursor: move;"></rect><ellipse id="_2021_4_8_12_37_58_Ellipse" cx="2304.97607421875" cy="359.98260498046875" stroke="#FF0000" fill="#F0F8FF" fill-opacity="0.5" stroke-width="1.5" stroke-dasharray="6 0" transform="translate(0,0)rotate(0)" CreatedOn="08/04/2021" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); cursor: move;" rx="674.09765625" ry="212.01446533203125"></ellipse>';
+
+
+
+
+function load()
+{ 
+  console.log(svgString1);
+parser = new DOMParser();
+                xmlDoc = parser.parseFromString("<svg>" + svgString1 + "</svg>", 'text/xml');
+
+
+ var EllipseXML = xmlDoc.getElementsByTagName("rect");
+for (var i = 0; i < EllipseXML.length; i++) {
+var a=paper.rect(EllipseXML[i].getAttribute('x'),EllipseXML[i].getAttribute('y'),EllipseXML[0].getAttribute('width'),EllipseXML[0].getAttribute('height'));
+//a.node.id = drawingAnnoId='rect'+rectCount;
+
+//a.node.setAttribute('onclick',"selected(this.id)");
+a.node.setAttribute('fill',EllipseXML[i].getAttribute('fill'));
+//a.node.setAttribute('class','ram');
+a.node.setAttribute('id',EllipseXML[i].getAttribute('id'));
+a.node.setAttribute('width',EllipseXML[i].getAttribute('width'));
+a.node.setAttribute('height',EllipseXML[i].getAttribute('height'));
+
+a.node.setAttribute('fill-opacity',EllipseXML[i].getAttribute('fill-opacity'));
+a.node.setAttribute('stroke-dasharray',EllipseXML[i].getAttribute('stroke-dasharray'));
+a.node.setAttribute('stroke-width',EllipseXML[i].getAttribute('stroke-width'));
+a.node.setAttribute('style',EllipseXML[i].getAttribute('style'));
+set.push(a);
+var id=EllipseXML[i].getAttribute('id');
+//idList.push(id);
+var s=d3.select("#"+a.node.id);
+s.on("click", handleMouseOver)
+
+
+}
+var EllipseXML = xmlDoc.getElementsByTagName("ellipse");
+for (var i = 0; i < EllipseXML.length; i++) {
+var a=paper.ellipse(EllipseXML[i].getAttribute('cx'),EllipseXML[i].getAttribute('cy'),EllipseXML[0].getAttribute('rx'),EllipseXML[0].getAttribute('ry'));
+//a.node.id = drawingAnnoId='rect'+rectCount;
+//a.node.setAttribute('onclick',"selected(this.id)");
+a.node.setAttribute('fill',EllipseXML[i].getAttribute('fill'));
+//a.node.setAttribute('class','ram');
+a.node.setAttribute('id',EllipseXML[i].getAttribute('id'));
+a.node.setAttribute('fill-opacity',EllipseXML[i].getAttribute('fill-opacity'));
+a.node.setAttribute('stroke-dasharray',EllipseXML[i].getAttribute('stroke-dasharray'));
+a.node.setAttribute('stroke-width',EllipseXML[i].getAttribute('stroke-width'));
+set.push(a);
+var id=EllipseXML[i].getAttribute('id');
+idList.push(id);
+}
+
+transformSet( set )
+}
+
+  var svgString="";
+   var svgString1="";
+  var elt;
+  var svgOutput;
+function save()
+{svgString1="";
+  svgString="";
+  
+  
+  for(var i=0;i<idList.length;i++){
+    var id=idList[i];
+    if(id=='s1'||id=='s2'||id=='s3'||id=='s4')
+    console.log("");
+    else{
+    var idd=id;
+var selection = d3.select("#"+id);
+ elt = selection.node();
+svgString=svgString+elt.toString();
+var s = new XMLSerializer();
+var str = s.serializeToString(elt);
+svgString1=svgString1+str;
+}
+ //console.log(svgString1);
+ //var s = new XMLSerializer();
+//var str = s.serializeToString(documentElement);
+//svgString=svgString+svgOutput;
+}
+
+/*
+
+var id=idList[1];
+
+
+console.log(id);
+
+    var idd=String(id);
+    id="#"+id;
+var selection = d3.select(id);
+var elt = selection.node();
+*/
+
+/*
+
+//  here test save svg load properly
+parser = new DOMParser();
+                xmlDoc = parser.parseFromString("<svg>" + svgString1 + "</svg>", 'text/xml');
+var EllipseXML = xmlDoc.getElementsByTagName("rect");
+for (var i = 0; i < EllipseXML.length; i++) {
+var a=paper.rect(EllipseXML[i].getAttribute('x'),EllipseXML[i].getAttribute('y'),EllipseXML[0].getAttribute('width'),EllipseXML[0].getAttribute('height'));
+//a.node.id = drawingAnnoId='rect'+rectCount;
+
+//a.node.setAttribute('onclick',"selected(this.id)");
+a.node.setAttribute('fill',EllipseXML[i].getAttribute('fill'));
+//a.node.setAttribute('class','ram');
+var id="test"+i;
+a.node.setAttribute('id',id);
+a.node.setAttribute('fill-opacity',EllipseXML[i].getAttribute('fill-opacity'));
+a.node.setAttribute('stroke-dasharray',EllipseXML[i].getAttribute('stroke-dasharray'));
+a.node.setAttribute('stroke-width',EllipseXML[i].getAttribute('stroke-width'));
+set.push(a);
+//var id=EllipseXML[i].getAttribute('id');
+
+}
+*/
+/*
+var EllipseXML = xmlDoc.getElementsByTagName("ellipse");
+for (var i = 0; i < EllipseXML.length; i++) {
+var a=paper.ellipse(EllipseXML[i].getAttribute('cx'),EllipseXML[i].getAttribute('cy'),EllipseXML[0].getAttribute('rx'),EllipseXML[0].getAttribute('ry'));
+//a.node.id = drawingAnnoId='rect'+rectCount;
+
+//a.node.setAttribute('onclick',"selected(this.id)");
+a.node.setAttribute('fill',EllipseXML[i].getAttribute('fill'));
+var id="testt"+i;
+a.node.setAttribute('id',id);
+a.node.setAttribute('fill-opacity',EllipseXML[i].getAttribute('fill-opacity'));
+a.node.setAttribute('stroke-dasharray',EllipseXML[i].getAttribute('stroke-dasharray'));
+a.node.setAttribute('stroke-width',EllipseXML[i].getAttribute('stroke-width'));
+set.push(a);
+var id=EllipseXML[i].getAttribute('id');
+idList.push(id);
+}
+
+*/
+transformSet( set )
+
+
+
+for(var i=0;i<idList.length;i++){
+  //if(idList[i]!='s1'||idList[i]!='s2'||idList[i]!='s3'||idList[i]!='s4')
+  var id1=idList[i];
+  if(id1[0]=='r'){
+d3.select("#"+id1).remove();
+ document.getElementById("s1").setAttribute('cy',0);
+document.getElementById("s1").setAttribute('cx',0);
+document.getElementById("s2").setAttribute('cy',0);
+document.getElementById("s2").setAttribute('cx',0);
+document.getElementById("s3").setAttribute('cy',0);
+document.getElementById("s3").setAttribute('cx',0);
+document.getElementById("s4").setAttribute('cy',0);
+document.getElementById("s4").setAttribute('cx',0);
+}
+}
+console.log(svgString1);
+}
+
+
+function handleMouseOver(d, i) {  // Add interactivity
+
+ var id=d3.select(this).attr('id');
+ 
+           idd=id;
+
+
+
+handleActive=true;
+
+if(id[0]!='s')
+{
+idd=id; 
+getProperties(idd);
+} 
+else
+{
+handle=id;
+
+if(idd[0]=='r')
+{
+  var rect = document.getElementById(idd);
+w1= parseFloat(rect.getAttributeNS(null, 'width'));
+h1 = parseFloat(rect.getAttributeNS(null, 'height'));
+x1 = parseFloat(rect.getAttributeNS(null, 'x'));
+y1 = parseFloat(rect.getAttributeNS(null, 'y'));
+
+}
+if(idd[0]=='c')
+{
+var circle = document.getElementById(idd);
+r1 = parseFloat(circle.getAttributeNS(null, 'r'));
+x1 = parseFloat(circle.getAttributeNS(null, 'cx'));
+y1 = parseFloat(circle.getAttributeNS(null, 'cy'));
+}
+if(idd[0]=='e')
+{
+var ellipse = document.getElementById(idd);
+
+x1 = parseFloat(ellipse.getAttributeNS(null, 'cx'));
+y1 = parseFloat(ellipse.getAttributeNS(null, 'cy'));
+rx1 = parseFloat(ellipse.getAttributeNS(null, 'rx'));
+ry1 = parseFloat(ellipse.getAttributeNS(null, 'ry'));
+
+}
+}
+
+if(clickFlag==true)
+{
+//  for Resize
+if(idd[0]=='c')
+{
+  var circle = document.getElementById(idd);
+var x = parseFloat(circle.getAttributeNS(null, 'cx'));
+var y = parseFloat(circle.getAttributeNS(null, 'cy'));
+var r = parseFloat(circle.getAttributeNS(null, 'r'));
+document.getElementById("s2").setAttribute('cy',y);
+document.getElementById("s2").setAttribute('cx',x-r);
+document.getElementById("s1").setAttribute('cy',y-r);
+document.getElementById("s1").setAttribute('cx',x);
+document.getElementById("s4").setAttribute('cy',y+r);
+document.getElementById("s4").setAttribute('cx',x);
+document.getElementById("s3").setAttribute('cy',y);
+document.getElementById("s3").setAttribute('cx',x+r);
+}
+if(idd[0]=='r')
+{
+var rect = document.getElementById(idd);
+var x = parseFloat(rect.getAttributeNS(null, 'x'));
+var y = parseFloat(rect.getAttributeNS(null, 'y'));
+var w = parseFloat(rect.getAttributeNS(null, 'width'));
+var h = parseFloat(rect.getAttributeNS(null, 'height'));
+document.getElementById("s1").setAttribute('cy',y);
+document.getElementById("s1").setAttribute('cx',x);
+document.getElementById("s2").setAttribute('cy',y);
+document.getElementById("s2").setAttribute('cx',x+w);
+document.getElementById("s3").setAttribute('cy',y+h);
+document.getElementById("s3").setAttribute('cx',x);
+document.getElementById("s4").setAttribute('cy',y+h);
+document.getElementById("s4").setAttribute('cx',x+w);
+}
+if(idd[0]=='e')
+{
+var ellipse = document.getElementById(idd);
+var x = parseFloat(ellipse.getAttributeNS(null, 'cx'));
+var y = parseFloat(ellipse.getAttributeNS(null, 'cy'));
+var rx = parseFloat(ellipse.getAttributeNS(null, 'rx'));
+var ry = parseFloat(ellipse.getAttributeNS(null, 'ry'));
+
+document.getElementById("s1").setAttribute('cy',y);
+document.getElementById("s1").setAttribute('cx',x-rx);
+document.getElementById("s2").setAttribute('cy',y);
+document.getElementById("s2").setAttribute('cx',x+rx);
+document.getElementById("s3").setAttribute('cy',y+ry);
+document.getElementById("s3").setAttribute('cx',x);
+document.getElementById("s4").setAttribute('cy',y-ry);
+document.getElementById("s4").setAttribute('cx',x);
+}
+if(idd[0]=='p' && idd[4]=='g')
+{
+  
+  
+var polygon = document.getElementById(idd);
+var x =document.getElementById(idd).getAttribute('d');
+var s=x.split(" ")
+
+for(i=1;i<(s.length-2);){
+
+if(s[i]=='L' || s[i]=='Z')
+console.log("mm");
+else{
+
+var aa=paper.circle(s[i],s[i+1],100);
+aa.node.id = 'PG_C'+i;
+aa.node.setAttribute('onclick',"selected(this.id)");
+aa.node.setAttribute('fill',"#223fa3");
+aa.node.setAttribute('class','ram');
+aa.node.setAttribute('fill-opacity',0.8);
+set.push(aa);
+}
+i=i+3;
+}
+
+}
+clickFlag=false;
+}
+else
+{
+
+clickFlag=true;
+if(handle!="")
+{
+//handle="";
+clickFlag=false;
+}
+}
+ }
+//viewer1.zoomPerdbClick = 2;
+$( "#annotation" ).dblclick(function() {
+  viewer1.zoomPerdbClick = 2;
+});
+
+var drawingAnnoId;
+$( "#annotation" ).click(function() {
+
+
+
+/*
+var EllipseXML = xmlDoc.getElementsByTagName("rect");
+debugger;
+for (var i = 0; i < EllipseXML.length; i++) {
+  var id=EllipseXML[i].getAttribute('id');
+  id="#"+id;
+var s=d3.select("#2021_4_8_12_36_5_Rect");
+
+s.on("mouseover", handleMouseOver)
+}
+*/
+/*
+var EllipseXML = xmlDoc.getElementsByTagName("rect");
+var d="rect1"
+ var id=EllipseXML[0].getAttribute('id');
+ console.log(id);
+var s=d3.select("#201");
+
+s.on("mouseover", handleMouseOver)
+
+*/
+
+if(handleActive==true)
+{
+  handleActive=false;
+
+}
+else
+{
+  document.getElementById("s1").setAttribute('cy',0);
+document.getElementById("s1").setAttribute('cx',0);
+document.getElementById("s2").setAttribute('cy',0);
+document.getElementById("s2").setAttribute('cx',0);
+document.getElementById("s3").setAttribute('cy',0);
+document.getElementById("s3").setAttribute('cx',0);
+document.getElementById("s4").setAttribute('cy',0);
+document.getElementById("s4").setAttribute('cx',0);
+  handleActive=false;
+}
+if(reSizeflag==false){
+reSizeflag=true;
+
+}
+ else
+ {
+ reSizeflag=false;
+handle="";
+
+}
+
+if(circleDraw==1)
+{
+var aa=paper.circle(currentImagePoint.x,currentImagePoint.y,500);
+aa.node.id = drawingAnnoId='c'+circleCount;
+aa.node.setAttribute('onclick',"selected(this.id)");
+aa.node.setAttribute('fill',"#223fa3");
+aa.node.setAttribute('fill-opacity',0.8);
+aa.node.setAttribute('class','element');
+set.push(aa);
+idList.push(aa.node.id);
+circleCount++;
+circleDraw++;
+}
+else
+{
+  circleDraw=0;
+ 
+}
+if(rectDraw==1)
+{
+  
+var a=paper.rect(currentImagePoint.x,currentImagePoint.y,500,500);
+a.node.id = drawingAnnoId='rect'+rectCount;
+
+//a.node.setAttribute('onclick',"selected(this.id)");
+a.node.setAttribute('fill',"#223fa3");
+//a.node.setAttribute('class','ram');
+a.node.setAttribute('fill-opacity',0.8);
+a.node.setAttribute('class','element');
+set.push(a);
+idList.push(a.node.id);
+rectCount++;
+rectDraw++;
+
+var s=d3.select("#"+a.node.id);
+s.on("click", handleMouseOver)
+
+
+}
+else
+{
+  rectDraw=0;
+  //drawingAnnoId=0;
+
+}
+if(ellipseDraw==1)
+{
+var a=paper.ellipse(currentImagePoint.x,currentImagePoint.y,100,100);
+a.node.id = drawingAnnoId='e'+ellipseCount;
+a.node.setAttribute('onclick',"selected(this.id)");
+a.node.setAttribute('fill',"#223fa3");
+a.node.setAttribute('class','element');
+a.node.setAttribute('fill-opacity',0.8);
+set.push(a);
+idList.push(a.node.id);
+ellipseDraw++;
+ellipseCount++;
+}
+else
+{
+  ellipseDraw=0;
+}
+transformSet( set )
+
+
+});
+
+function showProperty()
+{
+handle_select=false;
+  if(idd!="")
+  console.log(properties);
+  else
+  console.log("Please select Annotation...");
+}
+
+
+
+function resize(x,y)
+{
+            if(handle[0]=='s'){  
+                          
+                      if(idd[0]=='r')
+                      {                    
+                       
+                      var difx=x1-x;
+                      var dify=y1-y;  
+                       //difx=Math.abs(difx);
+                        //dify=Math.abs(dify); 
+                          var chkW=w1+difx;
+                          var chkH=h1+dify;
+                          //top left
+                        if(handle=='s1' && chkW>5 &&chkH>5)   
+                        {                              
+                      document.getElementById(idd).setAttribute('y',y);
+                      document.getElementById(idd).setAttribute('x',x);
+                      document.getElementById(idd).setAttribute('width',chkW);
+                      document.getElementById(idd).setAttribute('height',chkH);
+                      document.getElementById("s1").setAttribute('cy',y);//top left
+                      document.getElementById("s1").setAttribute('cx',x);
+                      document.getElementById("s2").setAttribute('cy',y);// top right
+                      document.getElementById("s2").setAttribute('cx',x+(w1+(difx)));
+            document.getElementById("s3").setAttribute('cy',y+(h1+(dify)));//buttom left
+            document.getElementById("s3").setAttribute('cx',x);
+          document.getElementById("s4").setAttribute('cy',y+(h1+(dify)));//buttom right
+          document.getElementById("s4").setAttribute('cx',x+(w1+(difx)));
+                      }
+                      
+                      var chkW1=0-(difx);
+                      var chkH1=0-(dify);
+                      // buttom right
+                      if(handle=='s4' && chkW1>5 &&chkH1>5)   
+                        {                              
+                      document.getElementById(idd).setAttribute('y',y1);
+                      document.getElementById(idd).setAttribute('x',x1);
+                      document.getElementById(idd).setAttribute('width',chkW1);
+                      document.getElementById(idd).setAttribute('height',chkH1);
+                      document.getElementById("s1").setAttribute('cy',y1);// top left
+                      document.getElementById("s1").setAttribute('cx',x1);
+                      
+                      document.getElementById("s2").setAttribute('cy',y1);//top right
+                      document.getElementById("s2").setAttribute('cx',x);
+                     
+                      document.getElementById("s3").setAttribute('cy',y);//buttom left
+                      document.getElementById("s3").setAttribute('cx',x1);
+                       document.getElementById("s4").setAttribute('cy',y);//buttom right
+                      document.getElementById("s4").setAttribute('cx',x);
+                      }
+                      
+                      var chkH2=0-(dify);
+                       var xx
+                      if(x>x1)
+                      {
+                       xx=0-(x1-x);
+                       
+                       var chkW2=w1-xx;
+                     }
+                       if(x1>x)
+                       {
+                       xx=(x-x1);
+                       var chkW2=(difx)+w1;
+                     }
+                    
+                      //buttom left
+                      
+                      if(handle=='s3' &&chkH2>5 &&chkW2>5)   
+                        {                    
+                                 
+                      document.getElementById(idd).setAttribute('y',y1);
+                      document.getElementById(idd).setAttribute('x',x);
+                      document.getElementById(idd).setAttribute('width',chkW2);
+                      document.getElementById(idd).setAttribute('height',chkH2);
+                      document.getElementById("s3").setAttribute('cy',y);// buttom left
+                      document.getElementById("s3").setAttribute('cx',x);
+                  document.getElementById("s2").setAttribute('cy',y-chkH2);// top right
+                  document.getElementById("s2").setAttribute('cx',x+chkW2);
+                      
+                      document.getElementById("s1").setAttribute('cy',y1);//top left
+                      document.getElementById("s1").setAttribute('cx',x);
+                      document.getElementById("s4").setAttribute('cy',y);//buttom right
+                      document.getElementById("s4").setAttribute('cx',x+chkW2);
+                      
+                      }
+
+                       var difx=0-(x1-x);
+                        var chkW=difx;
+                          var chkH=h1+dify;
+
+                      if(handle=='s2' && chkH>5 && chkW>5)   
+                        {                    
+                     
+                      document.getElementById(idd).setAttribute('y',y);
+                      document.getElementById(idd).setAttribute('x',x1);
+                      document.getElementById(idd).setAttribute('width',chkW);
+                      document.getElementById(idd).setAttribute('height',chkH);
+                      document.getElementById("s2").setAttribute('cy',y);// top right
+                      document.getElementById("s2").setAttribute('cx',x);
+                  document.getElementById("s1").setAttribute('cy',y);// top left
+                  document.getElementById("s1").setAttribute('cx',x1);
+                      
+                      document.getElementById("s3").setAttribute('cy',y1+h1);//buttom left
+                      document.getElementById("s3").setAttribute('cx',x1);
+                     document.getElementById("s4").setAttribute('cy',y1+h1);//buttom right
+                      document.getElementById("s4").setAttribute('cx',x);
+                      
+                      }
+                        }
+                        if(idd[0]=='c')
+                      {                                  
+                      var difx=x1-x;    
+                       difx=Math.abs(difx); 
+                       
+                       if(handle=='s1' || handle=='s4')   
+                          {              
+                          var dify=y1-y;    
+                       dify=Math.abs(dify);                    
+                      document.getElementById(idd).setAttribute('y',y1);
+                      document.getElementById(idd).setAttribute('x',x1);
+                      document.getElementById(idd).setAttribute('r',dify);
+                      document.getElementById("s3").setAttribute('cy',y1);//right
+                      document.getElementById("s3").setAttribute('cx',x1+dify);
+                      document.getElementById("s2").setAttribute('cy',y1);//left
+                      document.getElementById("s2").setAttribute('cx',x1-dify);
+                      document.getElementById("s1").setAttribute('cy',y1+dify);//top
+                      document.getElementById("s1").setAttribute('cx',x1);
+                      document.getElementById("s4").setAttribute('cy',y1-dify);//down
+                      document.getElementById("s4").setAttribute('cx',x1);
+                            }
+                            if(handle=='s3' || handle=='s2')   
+                          {              
+                          var difx=x1-x;    
+                       difx=Math.abs(difx);                    
+                      document.getElementById(idd).setAttribute('y',y1);
+                      document.getElementById(idd).setAttribute('x',x1);
+                      document.getElementById(idd).setAttribute('r',difx);
+                      document.getElementById("s3").setAttribute('cy',y1);//right
+                      document.getElementById("s3").setAttribute('cx',x1+difx);
+                      document.getElementById("s2").setAttribute('cy',y1);//left
+                      document.getElementById("s2").setAttribute('cx',x1-difx);
+                      document.getElementById("s1").setAttribute('cy',y1+difx);//top
+                      document.getElementById("s1").setAttribute('cx',x1);
+                      document.getElementById("s4").setAttribute('cy',y1-difx);//down
+                      document.getElementById("s4").setAttribute('cx',x1);
+                            }
+                            
+                        }   
+                             if(idd[0]=='e')
+                      {                                  
+                      var difx=x1-x;
+                      var dify=y1-y;   
+                       difx=Math.abs(difx);
+                        dify=Math.abs(dify);            
+                      document.getElementById(idd).setAttribute('ry',dify);
+                      document.getElementById(idd).setAttribute('rx',difx);    
+                      document.getElementById("s1").setAttribute('cy',y1);//left
+                      document.getElementById("s1").setAttribute('cx',x1-difx);
+                      document.getElementById("s2").setAttribute('cy',y1-dify);// top
+                      document.getElementById("s2").setAttribute('cx',x1);
+                      document.getElementById("s3").setAttribute('cy',y1);
+                      document.getElementById("s3").setAttribute('cx',x1+difx);
+                      document.getElementById("s4").setAttribute('cy',y1+dify);
+                      document.getElementById("s4").setAttribute('cx',x1);
+                           }    
+                          }    
+}
+
+function loadAnnotation()
+{
+
+  
+  if(properties.type=="ellipse"){
+  var aa=paper.ellipse(properties.cx,properties.cy,properties.rx,properties.ry);
+aa.node.id = 'e11';
+aa.node.setAttribute('onclick',"selected(this.id)");
+aa.node.setAttribute('fill',properties.fill);
+aa.node.setAttribute('fill-opacity',properties.opacity);
+aa.node.setAttribute('transform',properties.transform);
+set.push(aa);
+}
+if(properties.type=="circle"){
+  var aa=paper.circle(properties.cx,properties.cy,properties.r);
+aa.node.id = 'c11';
+aa.node.setAttribute('onclick',"selected(this.id)");
+aa.node.setAttribute('fill',properties.fill);
+aa.node.setAttribute('fill-opacity',properties.opacity);
+aa.node.setAttribute('transform',properties.transform);
+set.push(aa);
+}
+if(properties.type=="rect"){
+  var aa=paper.rect(properties.x,properties.y,properties.width,properties.height);
+aa.node.id = 'r11';
+aa.node.setAttribute('onclick',"selected(this.id)");
+aa.node.setAttribute('fill',properties.fill);
+aa.node.setAttribute('fill-opacity',properties.opacity);
+aa.node.setAttribute('transform',properties.transform);
+set.push(aa);
+}
+}
+    </script>
+</body>
+</html>

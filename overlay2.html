@@ -1,0 +1,173 @@
+<html>
+    <title>OpenSeadragon Overlay Demo</title>
+    <script type="text/javascript" src='openseadragon2.js'></script>
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <style type="text/css">
+
+        .openseadragon1 {
+            width: 800px;
+            height: 600px;
+        }
+    </style>
+</head>
+<body>
+    <div id="contentDiv" class="openseadragon1"></div>
+     <input type="button" value="OK " id="toggle-overlay">
+  <input type="button" value="Count " id="t1">
+
+    <script type="text/javascript">
+
+        var viewer1 = OpenSeadragon({
+  
+            id: "contentDiv",
+            prefixUrl: "images/",
+            tileSources: "tall.dzi",
+
+        });
+
+
+var x=0.1;
+var y=0.1;
+var w=0.399;
+var h=0.399;
+/*
+
+        
+var overlay = false;
+document.querySelector('#toggle-overlay').addEventListener('click', function() {
+
+if (overlay) {
+        viewer.removeOverlay("runtime-overlay");
+    } else {
+        var elt = document.createElement("div");
+        elt.id = "runtime-overlay";
+   elt.style.outline = "3px solid red";
+            elt.style.opacity = "0.7";
+            elt.textContent = "Scaled overlay";
+        elt.className = "highlight";
+        viewer.addOverlay({
+            element: elt,
+            location: new OpenSeadragon.Rect(x,y,w,h)
+        });
+    }
+    overlay = !overlay;
+
+
+console.log("haaa");
+});
+*/
+var xx = null;
+var yy = null;
+    
+document.addEventListener('mousemove', onMouseUpdate, false);
+//document.addEventListener('mouseenter', onMouseUpdate, false);
+    
+function onMouseUpdate(e) {
+
+y=y+0.01;
+w=w+0.01;
+  xx = e.pageX;
+  yy = e.pageY;
+}
+var svgns = "http://www.w3.org/2000/svg";
+    var circle1= document.createElementNS(svgns, 'rect');
+        
+        circle1.setAttributeNS(null, 'id', "c3");
+        circle1.setAttributeNS(null, 'style', 'fill: none; stroke: blue; stroke-width: 5px; opacity: 0.7;' );
+viewer1.addOverlay({
+            element: circle1,
+            location: new OpenSeadragon.Rect(0.5,1,1.4,0.5)
+        });
+
+         
+var svgns = "http://www.w3.org/2000/svg";
+    var circle1= document.createElementNS(svgns, 'rect');
+        
+        circle1.setAttributeNS(null, 'id', "c3");
+        circle1.setAttributeNS(null, 'style', 'fill: none; stroke: blue; stroke-width: 5px; opacity: 0.7;' );
+viewer1.addOverlay({
+            element: circle1,
+            location: new OpenSeadragon.Rect(1.5,0.5,1.4,0.5)
+        });
+
+
+var svgns = "http://www.w3.org/2000/svg";
+    var circle1= document.createElementNS(svgns, 'circle');
+        
+        circle1.setAttributeNS(null, 'id', "c2");
+        circle1.setAttributeNS(null, 'style', 'fill: none; stroke: blue; stroke-width: 5px; opacity: 0.7;' );
+viewer1.addOverlay({
+            element: circle1,
+            location: new OpenSeadragon.Rect(0.5,0.5,1,1.5)
+        });
+
+       
+
+var svgns = "http://www.w3.org/2000/svg";
+    var circle1= document.createElementNS(svgns, 'line');          
+        circle1.setAttributeNS(null, 'id', "c4");
+        circle1.setAttributeNS(null, 'style', 'fill: none; stroke: blue; stroke-width: 5px; opacity: 0.7;' );
+viewer1.addOverlay({
+            element: circle1,
+            location: new OpenSeadragon.Rect(1.2,0.7,1.4,0.5)
+        });
+   /*
+        var svgns = "http://www.w3.org/2000/svg";
+    var circle1= document.createElementNS(svgns, 'polyline');
+circle1.setAttributeNS(null,'points',"20,20 40,25 60,40 80,120 120,140 200,180")
+        circle1.setAttributeNS(null, 'id', "c5");
+        circle1.setAttributeNS(null, 'style', 'fill: none; stroke: blue; stroke-width: 5px; opacity: 0.7;' );
+viewer1.addOverlay({
+            element: circle1,
+            location: new OpenSeadragon.Rect(0.7,1.2,1.4,0.5)
+        });
+  
+          
+
+/*
+var svgns = "http://www.w3.org/2000/svg";
+    var circle1= document.createElementNS(svgns, 'rect');
+          circle1.setAttributeNS(null, 'x', 290);
+        circle1.setAttributeNS(null, 'y', 170);
+        circle1.setAttributeNS(null, 'width', 60);
+  circle1.setAttributeNS(null, 'height', 60);
+        circle1.setAttributeNS(null, 'id', "c3");
+        circle1.setAttributeNS(null, 'style', 'fill: none; stroke: blue; stroke-width: 5px; opacity: 0.7;' );
+viewer1.addOverlay({
+            element: circle1,
+            location: new OpenSeadragon.Rect(1.5,1,1.4,0.5)
+        });
+
+*/
+
+
+//OpenSeadragon.Overlay.prototype.drawRectangle1();
+
+
+/*
+document.querySelector('#toggle-overlay').addEventListener('click', function() {
+ viewer1.updateOverlay({
+            element: elt1,
+            location: new OpenSeadragon.Rect(2,1,1.4,0.5,90)
+        });
+});
+*/
+/*
+
+viewer.addHandler('update-viewport', function() {
+    var canvas = viewer.drawer.canvas;
+    var ctx = viewer.drawer.context;
+    ctx.strokeStyle = 'green';
+    ctx.lineWidth = 10;
+    ctx.strokeRect(270,270, 20, 20);
+
+});
+
+*/
+
+
+
+
+    </script>
+</body>
+</html>

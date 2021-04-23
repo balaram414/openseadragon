@@ -1,0 +1,46 @@
+<html>
+<body bgcolor="lightgray">
+<input id=text size=100 style="width:100%">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.3.0/raphael.js"></script>
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script>
+
+// Set up some objects on a Raphael drawing surface
+var draw = Raphael(0, 0, $(window).width(), $(window).height());
+var path = draw.path();
+path.attr({stroke: 'black', 'stroke-width': 3, fill: '#147EDB'});
+
+// This function sets the path from the input text
+function redraw() {
+  path.attr({path: $('#text').val()});
+}
+
+// Event handlers: do things on keyup, click, double-click
+$('#text').keyup(function() {
+  redraw();
+});
+
+$('body').click(function(event) {
+  var x = event.pageX;
+  var y = event.pageY;
+  var oldpath = $('#text').val();
+  if (!oldpath.match(/M/) || oldpath.match(/Z/)) {
+    $('#text').val('M ' + x + ' ' + y);
+  } else {
+    $('#text').val(oldpath + ' ' + x + ' ' + y);
+  }
+  redraw();
+});
+
+$('body').dblclick(function(event) {
+  var oldpath = $('#text').val();
+  $('#text').val(oldpath + ' Z');
+  redraw();
+});
+
+// stopPropagation keeps clicks on text from propagating up to <body>
+$('#text').click(function(event) { event.stopPropagation(); });
+$('#text').dblclick(function(event) { event.stopPropagation(); });
+</script>
+</body>
+</html>
